@@ -1,4 +1,12 @@
 import streamlit as st
+# ✅ 3. 페이지 설정
+st.set_page_config(
+    page_title="한눈에 보는 기후기술 🌍",
+    page_icon="🌍",
+    layout="wide",
+    initial_sidebar_state="expanded"
+)
+
 import pandas as pd
 from pathlib import Path
 import os
@@ -30,13 +38,6 @@ except Exception as e:
     st.error("❌ 데이터 불러오기 실패")
     st.error(traceback.format_exc())
 
-# ✅ 3. 페이지 설정
-st.set_page_config(
-    page_title="한눈에 보는 기후기술 🌍",
-    page_icon="🌍",
-    layout="wide",
-    initial_sidebar_state="expanded"
-)
 
 # ✅ 4. CSS 스타일
 st.markdown("""
