@@ -60,7 +60,7 @@ st.markdown("""
 
 def get_data_status():
     """데이터 상태 확인"""
-    base_path = Path('assets/data')
+    base_path = Path('./assets/data')
     
     data_files = {
         'scraped': {
