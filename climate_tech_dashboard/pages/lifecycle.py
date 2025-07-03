@@ -41,7 +41,7 @@ st.markdown("""
 def load_lifecycle_data():
     """수명주기 데이터 로드 또는 생성"""
     try:
-        data_path = Path('assets/data/processed/lifecycle_data.csv')
+        data_path = Path('./assets/data/processed/lifecycle_data.csv')
         if data_path.exists():
             return pd.read_csv(data_path)
         else:
