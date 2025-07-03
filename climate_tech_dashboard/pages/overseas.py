@@ -44,7 +44,7 @@ st.markdown("""
 def load_overseas_data():
     """해외진출 데이터 로드 또는 생성"""
     try:
-        data_path = Path('assets/data/processed/overseas_data.csv')
+        data_path = Path('./assets/data/processed/overseas_data.csv')
         if data_path.exists():
             return pd.read_csv(data_path)
         else:
