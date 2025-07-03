@@ -31,7 +31,7 @@ def load_classification_data():
     """분류체계 데이터 로드"""
     try:
         # 실제 크롤링된 데이터 로드 시도
-        data_path = Path('./climate_tech_classifivation.csv')
+        data_path = Path('../assets/data/scraped/climate_tech_classifivation.csv')
         if data_path.exists():
             df = pd.read_csv(data_path)
         else:
