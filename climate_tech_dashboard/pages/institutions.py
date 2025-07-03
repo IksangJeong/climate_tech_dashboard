@@ -34,7 +34,7 @@ def load_institution_data():
     """기관 현황 데이터 로드 또는 생성"""
     try:
         # 실제 데이터 경로 확인
-        data_path = Path('assets/data/processed/institution_data.csv')
+        data_path = Path('./assets/data/processed/institution_data.csv')
         if data_path.exists():
             return pd.read_csv(data_path)
         else:
