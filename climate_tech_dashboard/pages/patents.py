@@ -33,7 +33,7 @@ st.markdown("""
 def load_patent_data():
     """특허 데이터 로드 또는 생성"""
     try:
-        data_path = Path('assets/data/processed/patent_data.csv')
+        data_path = Path('./assets/data/processed/patent_data.csv')
         if data_path.exists():
             return pd.read_csv(data_path)
         else:
