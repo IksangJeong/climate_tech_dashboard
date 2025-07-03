@@ -1,8 +1,36 @@
 import streamlit as st
 import pandas as pd
 from pathlib import Path
+import os
+import traceback
 
-# 페이지 설정
+# ✅ 1. 크롤링 및 전처리 자동 실행
+def run_data_pipeline():
+    try:
+        st.info("🔄 기후기술 데이터를 자동 수집 중입니다...")
+        result = os.system("python run_app.py")
+        if result == 0:
+            st.success("✅ 데이터 수집 및 전처리 완료!")
+        else:
+            st.warning("⚠️ run_app.py 실행 중 오류가 발생했습니다.")
+    except Exception as e:
+        st.error("❌ run_app.py 실행 실패")
+        st.error(traceback.format_exc())
+
+run_data_pipeline()
+
+# ✅ 2. 처리된 데이터 불러오기
+institution_data = None
+patent_data = None
+
+try:
+    institution_data = pd.read_csv("assets/data/processed/institution_data.csv")
+    patent_data = pd.read_csv("assets/data/processed/patent_data.csv")
+except Exception as e:
+    st.error("❌ 데이터 불러오기 실패")
+    st.error(traceback.format_exc())
+
+# ✅ 3. 페이지 설정
 st.set_page_config(
     page_title="한눈에 보는 기후기술 🌍",
     page_icon="🌍",
@@ -10,7 +38,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# CSS 스타일링
+# ✅ 4. CSS 스타일
 st.markdown("""
 <style>
     .main-header {
@@ -56,11 +84,10 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
+# ✅ 5. 메인 화면
 def main():
-    # 메인 헤더
     st.markdown('<h1 class="main-header">🌍 한눈에 보는 기후기술</h1>', unsafe_allow_html=True)
-    
-    # 프로젝트 소개
+
     st.markdown("""
     <div class="card">
         <h3>📊 프로젝트 개요</h3>
@@ -75,48 +102,39 @@ def main():
         </ul>
     </div>
     """, unsafe_allow_html=True)
-    
-    # 네비게이션 메뉴
+
     st.markdown('<h2 class="sub-header">📋 메뉴</h2>', unsafe_allow_html=True)
-    
     col1, col2, col3 = st.columns(3)
-    
+
     with col1:
-        if st.button("🔬 기후기술 분류체계", key="nav1", help="기후기술의 분류체계를 파이차트로 시각화"):
+        if st.button("🔬 기후기술 분류체계", key="nav1"):
             st.switch_page("pages/classification.py")
-        
-        if st.button("📋 기후기술 특허 현황", key="nav4", help="연도별 특허 등록 건수 분석"):
+        if st.button("📋 기후기술 특허 현황", key="nav4"):
             st.switch_page("pages/patents.py")
-    
+
     with col2:
-        if st.button("🏢 기후기술 기관 현황", key="nav2", help="기관 규모별 매출액, 종사자 수 등 분석"):
+        if st.button("🏢 기후기술 기관 현황", key="nav2"):
             st.switch_page("pages/institutions.py")
-        
-        if st.button("🔄 기술 수명주기", key="nav5", help="기술 수명주기 단계별 현황"):
+        if st.button("🔄 기술 수명주기", key="nav5"):
             st.switch_page("pages/lifecycle.py")
-    
+
     with col3:
-        if st.button("🌏 해외 진출 현황", key="nav6", help="지역별 기후기술 해외 진출 분석"):
+        if st.button("🌏 해외 진출 현황", key="nav6"):
             st.switch_page("pages/overseas.py")
-        
-        if st.button("⚙️ 데이터 관리", key="nav3", help="데이터 수집 및 전처리"):
+        if st.button("⚙️ 데이터 관리", key="nav3"):
             st.switch_page("pages/data_management.py")
-    
-    # 시스템 정보
+
+    # 통계 카드
     st.markdown("---")
-    
     col1, col2, col3 = st.columns(3)
-    
     with col1:
-        st.markdown("""
+        st.markdown(f"""
         <div class="card">
             <h4>📊 데이터 현황</h4>
-            <p>• 기후기술 분류: 45개 소분류</p>
-            <p>• 기관 데이터: 2019-2020년</p>
-            <p>• 특허 데이터: 누적 건수</p>
+            <p>• 기관 수: {len(institution_data)}개</p>
+            <p>• 특허 수: {len(patent_data)}건</p>
         </div>
         """, unsafe_allow_html=True)
-    
     with col2:
         st.markdown("""
         <div class="card">
@@ -126,7 +144,6 @@ def main():
             <p>• 업데이트 주기: 연 1회</p>
         </div>
         """, unsafe_allow_html=True)
-    
     with col3:
         st.markdown("""
         <div class="card">
@@ -141,19 +158,15 @@ def main():
     with st.sidebar:
         st.markdown("### 🌍 기후기술 대시보드")
         st.markdown("---")
-        
         st.markdown("#### 📈 빠른 통계")
-        
-        # 샘플 통계 (실제 데이터로 교체 예정)
-        st.metric("총 기후기술 분류", "45개", "3개 대분류")
-        st.metric("분석 기간", "2019-2020", "2년간")
-        st.metric("데이터 소스", "3개", "KOSIS, CTIS")
-        
+        st.metric("총 기관 수", f"{len(institution_data)}개")
+        st.metric("총 특허 수", f"{len(patent_data)}건")
         st.markdown("---")
         st.markdown("#### 🔗 유용한 링크")
         st.markdown("- [KOSIS 통계청](https://kosis.kr)")
-        st.markdown("- [기후기술정보시스템](https://www.ctis.re.kr)")
+        st.markdown("- [CTIS 기후기술정보시스템](https://www.ctis.re.kr)")
         st.markdown("- [Streamlit 문서](https://docs.streamlit.io)")
 
+# ✅ 6. 앱 실행
 if __name__ == "__main__":
     main()
